@@ -1,0 +1,42 @@
+# Ignore PyInstaller build artifacts
+build/
+
+*.spec
+
+# Ignore the .exe file
+*.exe
+
+# Ignore log files
+*.log
+
+# Ignore Python cache and virtual environment files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py,cover
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Ignore IDE-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Ignore other temporary files
+*.log
+*.tmp
+*.bak
+
+# Ignore environment variables file
+.env
+
+# Ignore bot-virtual environment
+bot-env/
