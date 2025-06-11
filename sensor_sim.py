@@ -17,16 +17,6 @@ class SensorSim:
             self.mq135_value = 600
             self._initialized = True
 
-    @staticmethod
-    def run():
-        sim = SensorSim()
-        while True:
-            sleep(1.5)
-            print(f"MQ-2: {sim.simulate_mq2()}")
-            print(f"MQ-3: {sim.simulate_mq3()}")
-            print(f"MQ-135: {sim.simulate_mq135()}")
-            print("-----------------------------------")
-
     def simulate_mq2(self, min_value=200, max_value=3500):
         """
         MQ-2 sensor → Detects: general gas leaks (LPG, methane, propane, smoke)
@@ -70,8 +60,6 @@ class SensorSim:
             # Clamp the value -> return min/max values if the value of self.mq2_value exceeds min or max
             self.mq2_value = max(min_value, min(max_value, self.mq2_value))
             return self.mq2_value
-
-    # MQ - 3 → Detects: alcohols, benzene, ethanol, VOCs
 
     def simulate_mq3(self, min_value=100, max_value=3000):
         """
@@ -117,8 +105,6 @@ class SensorSim:
             self.mq3_value = max(min_value, min(self.mq3_value, max_value))
             return self.mq3_value
 
-    #MQ - 135 → Detects: benzene, ammonia, CO₂, smoke, general VOCs
-    # Typical ADC Range: 150-3200
     def simulate_mq135(self, min_value=150, max_value=3200):
         """
         MQ-135 sensor → Detects: alcohols, benzene, ethanol, VOCs (Volatile Organic Compounds)
