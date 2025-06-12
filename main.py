@@ -6,11 +6,8 @@ if __name__ == '__main__':
     sim = SensorSim()
     display = SensorDisplay()
 
+    sim.add_listener(display)
+
     while True:
-        mq2_reading = sim.simulate_mq2()
-        mq3_reading = sim.simulate_mq3()
-        mq135_reading = sim.simulate_mq135()
-
-        display.display(mq2_reading, mq3_reading, mq135_reading)
-
+        sim.notify_listeners(sim.simulate_mq2(), sim.simulate_mq3(), sim.simulate_mq135())
         sleep(1.5)

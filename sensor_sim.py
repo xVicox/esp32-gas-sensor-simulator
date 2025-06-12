@@ -1,5 +1,4 @@
 import random
-from time import sleep
 
 class SensorSim:
     _instance = None
@@ -16,6 +15,18 @@ class SensorSim:
             self.mq3_value = 400
             self.mq135_value = 600
             self._initialized = True
+
+            self._listeners = []
+
+    def add_listener(self, subscriber):
+        for listener in self._listeners:
+            if listener is subscriber:
+                return
+        self._listeners.append(subscriber)
+
+    def notify_listeners(self, mq2_change, mq3_change, mq135_change):
+        for sub in self._listeners:
+            sub.sensor_values_updated(mq2_change, mq3_change, mq135_change)
 
     def simulate_mq2(self, min_value=200, max_value=3500):
         """
