@@ -1,4 +1,6 @@
 from datetime import datetime
+from value_interpreter import ValueInterpreter
+
 
 class SensorDisplay:
 
@@ -19,15 +21,42 @@ class SensorDisplay:
 
             self._initialized = True
 
+            self._value_interpreter = ValueInterpreter()
+
     # Will update the display based on new values coming from the sensor simulator (sensor_sim.py)
     def sensor_values_updated(self, mq2_reading, mq3_reading, mq135_reading):
-        print(datetime.now().strftime("%Y-%B-%d %H:%M:%S"))
-        print("*********************")
-        print(f"MQ-2: {mq2_reading} ({mq2_reading - self.mq2_prev_value})")
-        print(f"MQ-3: {mq3_reading} ({mq3_reading - self.mq3_prev_value})")
-        print(f"MQ-135: {mq135_reading} ({mq135_reading - self.mq135_prev_value})")
-        print("-----------------------------------")
+        timestamp = datetime.now().strftime("%Y-%B-%d %H:%M:%S")
+        mq2_change = mq2_reading - self.mq2_prev_value
+        mq3_change = mq3_reading - self.mq3_prev_value
+        mq135_change =mq135_reading - self.mq135_prev_value
+
+        mq2_risk_level = self._value_interpreter.interpret_values_for_mq2(mq2_reading).name
+        mq3_risk_level = self._value_interpreter.interpret_values_for_mq3(mq3_reading).name
+        mq135_risk_level = self._value_interpreter.interpret_values_for_mq135(mq135_reading).name
+
+        reset_color = "\033[0m"
+
+        print(timestamp)
+        print("************************")
+        print(f"{'Sensor':<8} {'Value':>8} {'Change':>8} {'Risk Level':>5}")
+        print("-" * 35)
+        print(f"{'MQ-2':<8} {mq2_reading:>8} {mq2_change:>+8} {self.get_colored_text(mq2_risk_level):>5}")
+        print(f"{'MQ-3':<8} {mq3_reading:>8} {mq3_change:>+8} {self.get_colored_text(mq3_risk_level):>15}")
+        print(f"{'MQ-135':<8} {mq135_reading:>8} {mq135_change:>+8} {self.get_colored_text(mq135_risk_level):>15}")
+        print("-" * 35 + "\n")
+
          # updating previous values
         self.mq2_prev_value = mq2_reading
         self.mq3_prev_value = mq3_reading
         self.mq135_prev_value = mq135_reading
+
+    @staticmethod
+    def get_colored_text(risk_level):
+        colors = {
+            "SAFE": "\033[92m",
+            "CAUTION": "\033[93m",
+            "HAZARDOUS": "\033[95m",
+            "CRITICAL": "\033[91m"
+        }
+        reset = "\033[0m"
+        return f"{colors.get(risk_level, '')}{risk_level}{reset}"
