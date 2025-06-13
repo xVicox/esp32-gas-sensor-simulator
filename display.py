@@ -2,13 +2,13 @@ from datetime import datetime
 from value_interpreter import ValueInterpreter
 
 
-class SensorDisplay:
+class Display:
 
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(SensorDisplay, cls).__new__(cls)
+            cls._instance = super(Display, cls).__new__(cls)
         return cls._instance
 
     def __init__(self):

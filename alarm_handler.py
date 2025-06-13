@@ -13,6 +13,8 @@ class AlarmHandler:
             "spike": "resources/sounds/spike_beep.mp3"
         }
 
+
+
     @staticmethod
     def caution_level_reached():
         pass
