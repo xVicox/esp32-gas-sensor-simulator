@@ -11,28 +11,39 @@ class SensorSim:
     def __init__(self):
         if not hasattr(self, "_initialized"):
             # base values
-            self.mq2_value = 800
+            self.mq2_value = 350
             self.mq3_value = 400
             self.mq135_value = 600
             self._initialized = True
 
-            self._listeners = []
+            self._sensor_update_listeners = []
+            self._alarm_listeners = []
 
-    def add_listener(self, subscriber):
-        for listener in self._listeners:
+    def add_sensor_update_listener(self, subscriber):
+        for listener in self._sensor_update_listeners:
             if listener is subscriber:
                 return
-        self._listeners.append(subscriber)
+        self._sensor_update_listeners.append(subscriber)
 
-    def notify_listeners(self, mq2_change, mq3_change, mq135_change):
-        for sub in self._listeners:
+    def notify_sensor_update_listeners(self, mq2_change, mq3_change, mq135_change):
+        for sub in self._sensor_update_listeners:
             sub.sensor_values_updated(mq2_change, mq3_change, mq135_change)
 
-    def simulate_mq2(self, min_value=200, max_value=3500):
+    def add_alarm_listener(self, subscriber):
+        for listener in self._alarm_listeners:
+            if listener is subscriber:
+                return
+        self._alarm_listeners.append(subscriber)
+
+    def notify_alarm_listeners(self):
+        for sub in self._alarm_listeners:
+            sub.spike_in_value_registered()
+
+    def simulate_mq2(self, device_name="MQ-2", min_value=200, max_value=3500):
         """
         MQ-2 sensor → Detects: general gas leaks (LPG, methane, propane, smoke)
-        Typical ADC Range: 200–3500, natural drift ±5-15, spike range +1000 to +2000
-        Base value set to 800
+        Typical ADC Range: 200–3500, natural drift ±5-15, spike range +200 to +400
+        Base value set to 350
 
         Simulates an analog sensor reading for the MQ-2 gas sensor.
         This method generates a pseudo-random value that mimics real sensor behavior,
@@ -46,13 +57,17 @@ class SensorSim:
         Parameters:
             min_value (int): Minimum ADC value for the sensor reading (default is 200).
             max_value (int): Maximum ADC value for the sensor reading (default is 3500).
+            device_name (str):
 
         Returns:
             int: Simulated sensor reading clamped within the given range.
         """
+
+
         # random spike
         if random.random() < 0.05:
-            self.mq2_value += random.randint(1000,2000)
+            self.mq2_value += random.randint(200,400)
+            self.notify_alarm_listeners()
             return self.mq2_value
 
         drift = random.randint(5,15)
@@ -72,10 +87,10 @@ class SensorSim:
             self.mq2_value = max(min_value, min(max_value, self.mq2_value))
             return self.mq2_value
 
-    def simulate_mq3(self, min_value=100, max_value=3000):
+    def simulate_mq3(self, device_name="MQ-3", min_value=100, max_value=3000):
         """
         MQ-3 sensor → Detects: alcohols, benzene, ethanol, VOCs (Volatile Organic Compounds)
-        Typical ADC Range: 100-3000, natural drift ±5-20, spike range +800 to +1200
+        Typical ADC Range: 100-3000, natural drift ±5-20, spike range +200 to +400
         Base value set to 400
 
         The MQ-3 sensor detects alcohols, benzene, ethanol, and various VOCs.
@@ -88,6 +103,7 @@ class SensorSim:
         - The resulting value is clamped to stay within the specified ADC range.
 
         Parameters:
+            device_name (str):
             min_value (int): Minimum ADC value for the sensor reading (default is 100).
             max_value (int): Maximum ADC value for the sensor reading (default is 3000).
 
@@ -96,7 +112,8 @@ class SensorSim:
         """
         # random spike
         if random.random() < 0.04:
-            self.mq3_value += random.randint(800, 1200)
+            self.mq3_value += random.randint(200, 400)
+            self.notify_alarm_listeners()
             return self.mq3_value
 
         drift = random.randint(5, 20)
@@ -116,10 +133,10 @@ class SensorSim:
             self.mq3_value = max(min_value, min(self.mq3_value, max_value))
             return self.mq3_value
 
-    def simulate_mq135(self, min_value=150, max_value=3200):
+    def simulate_mq135(self, device_name="MQ-135", min_value=150, max_value=3200):
         """
         MQ-135 sensor → Detects: alcohols, benzene, ethanol, VOCs (Volatile Organic Compounds)
-        Typical ADC Range: 100-3000, natural drift ±5-20, spike range +800 to +1200
+        Typical ADC Range: 100-3000, natural drift ±5-20, spike range +200 to +400
         Base value set to 400
 
         MQ-135 sensor detects various gases related to air pollution and indoor air quality,
@@ -133,6 +150,7 @@ class SensorSim:
         - The final value is clamped to remain within the defined ADC range.
 
         Parameters:
+            device_name (str):
             min_value (int): Minimum ADC value for the sensor reading (default is 150).
             max_value (int): Maximum ADC value for the sensor reading (default is 3200).
 
@@ -141,7 +159,8 @@ class SensorSim:
         """
         # random spike
         if random.random() < 0.05:
-            self.mq135_value += random.randint(700, 1300)
+            self.mq135_value += random.randint(200, 400)
+            self.notify_alarm_listeners()
             return self.mq135_value
 
         drift = random.randint(5, 25)

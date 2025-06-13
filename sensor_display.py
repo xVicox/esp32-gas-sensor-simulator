@@ -40,9 +40,9 @@ class SensorDisplay:
         print("************************")
         print(f"{'Sensor':<8} {'Value':>8} {'Change':>8} {'Risk Level':>5}")
         print("-" * 35)
-        print(f"{'MQ-2':<8} {mq2_reading:>8} {mq2_change:>+8} {self.get_colored_text(mq2_risk_level):>5}")
-        print(f"{'MQ-3':<8} {mq3_reading:>8} {mq3_change:>+8} {self.get_colored_text(mq3_risk_level):>15}")
-        print(f"{'MQ-135':<8} {mq135_reading:>8} {mq135_change:>+8} {self.get_colored_text(mq135_risk_level):>15}")
+        print(f"{'MQ-2':<8} {mq2_reading:>8} {mq2_change:>+8} {self.get_colored_text(mq2_risk_level):>15}{reset_color}")
+        print(f"{'MQ-3':<8} {mq3_reading:>8} {mq3_change:>+8} {self.get_colored_text(mq3_risk_level):>15}{reset_color}")
+        print(f"{'MQ-135':<8} {mq135_reading:>8} {mq135_change:>+8} {self.get_colored_text(mq135_risk_level):>15}{reset_color}")
         print("-" * 35 + "\n")
 
          # updating previous values
