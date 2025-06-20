@@ -19,7 +19,7 @@ class ValueInterpreter:
         elif value > 2000:
             return GasLevel.CRITICAL
         else: # This should never happen
-            return -1
+            return GasLevel.SAFE
 
     @staticmethod
     def interpret_values_for_mq3(value):
@@ -32,7 +32,7 @@ class ValueInterpreter:
         elif value > 1800:
             return GasLevel.CRITICAL
         else:  # This should never happen
-            return -1
+            return GasLevel.SAFE
 
     @staticmethod
     def interpret_values_for_mq135(value):
@@ -45,4 +45,4 @@ class ValueInterpreter:
         elif value > 2200:
             return GasLevel.CRITICAL
         else: # This should never happen
-            return -1
+            return GasLevel.SAFE

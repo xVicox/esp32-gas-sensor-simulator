@@ -27,7 +27,7 @@ class SensorSim:
 
             self.notify_raw_values_listeners(mq2_change, mq3_change, mq135_change)
 
-            sleep(1.5)
+            sleep(2.5)
 
     def add_raw_values_listener(self, subscriber):
         for listener in self._raw_values_listeners:
@@ -65,6 +65,7 @@ class SensorSim:
         # random spike
         if random.random() < 0.05:
             self._mq2_value += random.randint(200, 400)
+
             return self._mq2_value
 
         drift = random.randint(5,15)

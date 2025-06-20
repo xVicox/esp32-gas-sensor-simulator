@@ -2,7 +2,6 @@ from sensor_reader import SensorReader
 from sensor_sim import SensorSim
 from display import Display
 from alarm_handler import AlarmHandler
-from time import sleep
 
 if __name__ == '__main__':
     sim = SensorSim()
@@ -11,7 +10,7 @@ if __name__ == '__main__':
     sound_alarm = AlarmHandler()
 
     sim.add_raw_values_listener(microcontroller_sim)
-    microcontroller_sim.add_sensor_update_listener(display)
-    microcontroller_sim.add_sensor_update_listener(sound_alarm)
+    microcontroller_sim.add_raw_data_listeners(display)
+    microcontroller_sim.add_alarm_data_listeners(sound_alarm)
 
     sim.run_simulation()

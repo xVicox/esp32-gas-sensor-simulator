@@ -15,9 +15,9 @@ class Display:
         if not hasattr(self, '_initialized'):
 
             # set to base values
-            self.mq2_prev_value = 800
-            self.mq3_prev_value = 400
-            self.mq135_prev_value = 600
+            self.mq2_base_value = 350
+            self.mq3_base_value = 400
+            self.mq135_base_value = 600
 
             self._initialized = True
 
@@ -26,9 +26,9 @@ class Display:
     # Will update the display based on new values coming from the sensor simulator (sensor_sim.py)
     def sensor_values_updated(self, mq2_reading, mq3_reading, mq135_reading):
         timestamp = datetime.now().strftime("%Y-%B-%d %H:%M:%S")
-        mq2_change = mq2_reading - self.mq2_prev_value
-        mq3_change = mq3_reading - self.mq3_prev_value
-        mq135_change =mq135_reading - self.mq135_prev_value
+        mq2_change = mq2_reading - self.mq2_base_value
+        mq3_change = mq3_reading - self.mq3_base_value
+        mq135_change = mq135_reading - self.mq135_base_value
 
         mq2_risk_level = self._value_interpreter.interpret_values_for_mq2(mq2_reading).name
         mq3_risk_level = self._value_interpreter.interpret_values_for_mq3(mq3_reading).name
@@ -45,10 +45,10 @@ class Display:
         print(f"{'MQ-135':<8} {mq135_reading:>8} {mq135_change:>+8} {self.get_colored_text(mq135_risk_level):>15}{reset_color}")
         print("-" * 35 + "\n")
 
-         # updating previous values
-        self.mq2_prev_value = mq2_reading
-        self.mq3_prev_value = mq3_reading
-        self.mq135_prev_value = mq135_reading
+        # updating previous base values
+        self.mq2_base_value = mq2_reading
+        self.mq3_base_value = mq3_reading
+        self.mq135_base_value = mq135_reading
 
     @staticmethod
     def get_colored_text(risk_level):
