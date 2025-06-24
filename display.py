@@ -34,8 +34,6 @@ class Display:
         mq3_risk_level = self._value_interpreter.interpret_values_for_mq3(mq3_reading).name
         mq135_risk_level = self._value_interpreter.interpret_values_for_mq135(mq135_reading).name
 
-        reset_color = "\033[0m"
-
         print(timestamp)
         print("************************")
         print(f"{'Sensor':<8} {'Value':>8} {'Change':>8} {'Risk Level':>5}")
@@ -50,13 +48,3 @@ class Display:
         self.mq3_base_value = mq3_reading
         self.mq135_base_value = mq135_reading
 
-    @staticmethod
-    def get_colored_text(risk_level):
-        colors = {
-            "SAFE": "\033[92m",
-            "CAUTION": "\033[93m",
-            "HAZARDOUS": "\033[95m",
-            "CRITICAL": "\033[91m"
-        }
-        reset = "\033[0m"
-        return f"{colors.get(risk_level, '')}{risk_level}{reset}"

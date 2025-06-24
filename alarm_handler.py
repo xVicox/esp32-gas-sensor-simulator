@@ -16,17 +16,17 @@ class AlarmHandler:
             "spike": "resources/sounds/spike_beep.mp3"
         }
 
-    def spike_in_value_registered(self):
+    def spike_in_value_registered(self, device):
         AlarmHandler.play_alarm_sound(self, "spike")
 
 
-    def caution_level_reached(self):
+    def caution_level_reached(self, device):
         AlarmHandler.play_alarm_sound(self,"caution")
 
-    def hazardous_level_reached(self):
+    def hazardous_level_reached(self, device):
         AlarmHandler.play_alarm_sound(self,"hazardous")
 
-    def critical_level_reached(self):
+    def critical_level_reached(self, device):
         AlarmHandler.play_alarm_sound(self,"critical")
 
     def play_alarm_sound(self, alarm_type):

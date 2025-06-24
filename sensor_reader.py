@@ -61,7 +61,7 @@ class SensorReader:
         self._sensor_values["MQ-135"] = self._mq135_value
 
         # detect spikes notify alarm handler
-        self.notify_alarm_data_listeners_on_raw_data()
+        self.notify_alarm_data_listeners_on_spike_event()
 
         # update base values
         self._mq2_base_value = self._mq2_value
@@ -113,7 +113,7 @@ class SensorReader:
             if risk_level == "CRITICAL":
                 listener.critical_level_reached(device)
 
-    def notify_alarm_data_listeners_on_raw_data(self):
+    def notify_alarm_data_listeners_on_spike_event(self):
         for listener in self._alarm_data_listeners:
             # SPIKE NOTIFS
             if self._mq2_value - self._mq2_base_value >= 200:
