@@ -73,7 +73,6 @@ class SensorReader:
             value = self._sensor_values[sensor_name]
             interpreter = self._sensor_risk_levels[sensor_name]
             risk_level = interpreter(value).name
-            print(f"{sensor_name} is {risk_level}")
 
             # notify alarm listeners on risk level changes
             if risk_level == "CAUTION" or risk_level == "HAZARDOUS" or risk_level == "CRITICAL":

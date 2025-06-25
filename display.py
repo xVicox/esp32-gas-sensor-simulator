@@ -1,9 +1,7 @@
-from datetime import datetime
-from value_interpreter import ValueInterpreter
-
+from sensor_parser import SensorParser
 
 class Display:
-
+    """ Handles displaying sensor data to the console """
     _instance = None
 
     def __new__(cls):
@@ -13,38 +11,14 @@ class Display:
 
     def __init__(self):
         if not hasattr(self, '_initialized'):
-
-            # set to base values
-            self.mq2_base_value = 350
-            self.mq3_base_value = 400
-            self.mq135_base_value = 600
-
+            self._sensor_parser = SensorParser()
             self._initialized = True
 
-            self._value_interpreter = ValueInterpreter()
-
-    # Will update the display based on new values coming from the sensor simulator (sensor_sim.py)
     def sensor_values_updated(self, mq2_reading, mq3_reading, mq135_reading):
-        timestamp = datetime.now().strftime("%Y-%B-%d %H:%M:%S")
-        mq2_change = mq2_reading - self.mq2_base_value
-        mq3_change = mq3_reading - self.mq3_base_value
-        mq135_change = mq135_reading - self.mq135_base_value
+        """ Updates sensor readings and prints the formatted display string. """
+        self._sensor_parser.sensor_values_updated(mq2_reading,mq3_reading,mq135_reading)
+        self.emit_to_display()
 
-        mq2_risk_level = self._value_interpreter.interpret_values_for_mq2(mq2_reading).name
-        mq3_risk_level = self._value_interpreter.interpret_values_for_mq3(mq3_reading).name
-        mq135_risk_level = self._value_interpreter.interpret_values_for_mq135(mq135_reading).name
-
-        print(timestamp)
-        print("************************")
-        print(f"{'Sensor':<8} {'Value':>8} {'Change':>8} {'Risk Level':>5}")
-        print("-" * 35)
-        print(f"{'MQ-2':<8} {mq2_reading:>8} {mq2_change:>+8} {self.get_colored_text(mq2_risk_level):>15}{reset_color}")
-        print(f"{'MQ-3':<8} {mq3_reading:>8} {mq3_change:>+8} {self.get_colored_text(mq3_risk_level):>15}{reset_color}")
-        print(f"{'MQ-135':<8} {mq135_reading:>8} {mq135_change:>+8} {self.get_colored_text(mq135_risk_level):>15}{reset_color}")
-        print("-" * 35 + "\n")
-
-        # updating previous base values
-        self.mq2_base_value = mq2_reading
-        self.mq3_base_value = mq3_reading
-        self.mq135_base_value = mq135_reading
-
+    def emit_to_display(self):
+        """ Prints the current formatted sensor data to the console. """
+        print(self._sensor_parser.display_string)

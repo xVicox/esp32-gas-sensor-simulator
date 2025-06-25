@@ -3,6 +3,7 @@ from datetime import datetime
 from value_interpreter import ValueInterpreter
 
 class SensorParser:
+    """Parses sensor readings and formats them for display and logging."""
 
     _instance = None
 
@@ -27,7 +28,15 @@ class SensorParser:
             self._display_string = ""
 
     def sensor_values_updated(self, mq2_reading, mq3_reading, mq135_reading):
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        """
+        Updates sensor values and computes risk, change, and formatted output.
+
+        Args:
+            mq2_reading (int): Current MQ-2 sensor value.
+            mq3_reading (int): Current MQ-3 sensor value.
+            mq135_reading (int): Current MQ-135 sensor value.
+        """
+        timestamp = datetime.now()
         mq2_change = mq2_reading - self.mq2_base_value
         mq3_change = mq3_reading - self.mq3_base_value
         mq135_change = mq135_reading - self.mq135_base_value
@@ -53,10 +62,20 @@ class SensorParser:
         self.mq3_base_value = mq3_reading
         self.mq135_base_value = mq135_reading
 
+    @property
+    def display_string(self):
+        return self._display_string
+
+    @property
+    def log_string(self):
+        return self._log_string
+
     @staticmethod
     def get_log_string(data):
+        """ Formats a data dictionary into a compact log-friendly string. """
+        timestamp = data['timestamp'].strftime("%Y%m%d_%H%M%S")
         log_string = (
-            f"{data['timestamp']}"
+            f"{timestamp}"
             f"|MQ2_{data['readings']['MQ2']['value']}_{data['readings']['MQ2']['change']}_{data['readings']['MQ2']['risk']}"
             f"|MQ3_{data['readings']['MQ3']['value']}_{data['readings']['MQ3']['change']}_{data['readings']['MQ3']['risk']}"
             f"|MQ135_{data['readings']['MQ135']['value']}_{data['readings']['MQ135']['change']}_{data['readings']['MQ135']['risk']}"
@@ -65,8 +84,11 @@ class SensorParser:
 
     @staticmethod
     def get_display_string(data):
+        """ Formats a data dictionary into a human-readable display string. """
+
+        timestamp = data['timestamp'].strftime("%d-%B-%Y %H:%M:%S")
         display_string = (
-            f"{data['timestamp']}\n"
+            f"{timestamp}\n"
             f"************************\n"
             f"{'Sensor':<8} {'Value':>8} {'Change':>8} {'Risk Level':>15}\n"
             + "-" * 35 + "\n"

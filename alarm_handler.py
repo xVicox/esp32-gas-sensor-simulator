@@ -19,7 +19,6 @@ class AlarmHandler:
     def spike_in_value_registered(self, device):
         AlarmHandler.play_alarm_sound(self, "spike")
 
-
     def caution_level_reached(self, device):
         AlarmHandler.play_alarm_sound(self,"caution")
 
